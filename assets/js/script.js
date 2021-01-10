@@ -285,52 +285,23 @@ var dragLeaveHandler = function(event) {
   };
 
   var loadTasks = function() {
-      // Get task items from localStorgage
-      var savedTasks = localStorage.getItem("tasks");
-
-      if(!savedTasks) {
-          return false;
-      }
-
-      // Convert tasks from string format back into an array of objects
-      savedTasks = JSON.parse(savedTasks);
-
-      // Iterates thru a tasks array and creates task elements on the page from it
-      for(i = 0; i < savedTasks.length; i++) {
-        //   savedTasks[i] = taskIdCounter;    
-          listItemEl = document.createElement("li");
-          listItemEl.className = "task-item";
-          listItemEl.setAttribute("data-task-id" , savedTasks[i].id);
-          listItemEl.setAttribute("draggable" , true);
-
-          taskInfoEl = document.createElement("div");
-          taskInfoEl.className = "task-info"
-          taskInfoEl.innerHTML = "<h3 class='task-name'>" + savedTasks[i].name + "</h3><span class='task-type'>" + savedTasks[i].type + "</span>";
-          listItemEl.appendChild(taskInfoEl);
-
-          var taskActionsEl = createTaskActions(savedTasks[i].id);
-          listItemEl.appendChild(taskActionsEl);
-          
-          if (savedTasks[i].status === "to do") {
-            listItemEl.querySelector("select[name='status-change']").selectedIndex = 0;
-            tasksToDoEl.appendChild(listItemEl);
-          }
-          else if(savedTasks[i].status = "in progress") {
-              listItemEl.querySelector("select[name='status-change']").selectedIndex = 1;
-              tasksInProgressEl.appendChild(listItemEl);
-          }
-          else if (savedTasks[i].status = "complete") {
-            listItemEl.querySelector("select[name='status-change']").selectedIndex = 2;
-            tasksCompletedEl.appendChild(listItemEl);
-          }
-
-          taskIdCounter++;
-
-          console.log(listItemEl);
-      }
-
+    var savedTasks = localStorage.getItem("tasks");
+    // if there are no tasks, set tasks to an empty array and return out of the function
+    if (!savedTasks) {
+      return false;
+    }
+    console.log("Saved tasks found!");
+    // else, load up saved tasks
+  
+    // parse into array of objects
+    savedTasks = JSON.parse(savedTasks);
+  
+    // loop through savedTasks array
+    for (var i = 0; i < savedTasks.length; i++) {
+      // pass each task object into the `createTaskEl()` function
+      createTaskEl(savedTasks[i]);
+    }
   };
-
 formEl.addEventListener("submit", taskFormHandler);
 pageContentEl.addEventListener("click", taskButtonHandler);
 pageContentEl.addEventListener("change", taskStatusChangeHandler);
